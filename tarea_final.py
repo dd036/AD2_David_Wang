@@ -1,6 +1,7 @@
 import random
 import pokemons as pok
 
+
 num_partida = 0
 partida = input("Quieres empezar la partida? \nsi/no \n").lower()
 tutorial = True
