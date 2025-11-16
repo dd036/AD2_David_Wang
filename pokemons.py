@@ -10,7 +10,7 @@ class Pokemon:
         self.hp_actual = self.hp
 
     def cambio_stats(self, niveles):
-        multiplo_cambio = int(niveles) * 1.1
+        multiplo_cambio = round(1.1**niveles, 2)
         self.hp = round(self.hp * multiplo_cambio, 2)
         self.ataque = round(self.ataque * multiplo_cambio, 2)
         
@@ -42,7 +42,7 @@ class Tipo(Pokemon):
     def atacar (self, otro):
         #tabla de Tipos
         multiplicador = 1.5 if otro.tipo in Tipo.tabla_tipo_fuerte.get(self.tipo, []) else 1.0
-        daño = self.ataque * multiplicador
+        daño = round(self.ataque * multiplicador, 2)
         otro.hp_actual = otro.hp_actual - daño 
         if otro.hp_actual < 0:
             otro.hp_actual = 0
@@ -163,9 +163,9 @@ class Equipo:
     def cambiar_pokemon(self):
         cambio = True
         while cambio:
-            if self.todos_ko:
+            if self.todos_ko():
                 cambio = False
-                return False
+                return None
             else:
                 self.ver_equipo()
                 opcion = input("a que slot quieres cambiar: ").lower()
