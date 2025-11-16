@@ -8,13 +8,12 @@ class Pokemon:
         self.hp_actual = hp
     def curar (self):
         self.hp_actual = self.hp
-    def cambio_stats(self):
-        self.hp = round(self.hp * 1.1, 2)
-        self.ataque = round(self.ataque * 1.1, 2)
-        self.curar
-        print(f"{self.nombre} ha subido de nivel, sus nuevos stats son:\n"
-              f"{self.ataque} ataque\n"
-              f"{self.hp} max HP")
+
+    def cambio_stats(self, niveles):
+        multiplo_cambio = int(niveles) * 1.1
+        self.hp = round(self.hp * multiplo_cambio, 2)
+        self.ataque = round(self.ataque * multiplo_cambio, 2)
+        
 
 class Tipo(Pokemon):
 
@@ -51,7 +50,7 @@ class Tipo(Pokemon):
 
     def posible_captura(self):
         if self.hp >= self.hp_actual >= self.hp*0.75:
-            porcentage = 0.33
+            porcentage = 0.25
         elif 0.75*self.hp >= self.hp_actual > self.hp*0.5:
             porcentage = 0.5
         else:
@@ -164,7 +163,7 @@ class Equipo:
     def cambiar_pokemon(self):
         cambio = True
         while cambio:
-            if self.todos_ko == True:
+            if self.todos_ko:
                 cambio = False
                 return False
             else:
@@ -329,9 +328,9 @@ kabuto = Tipo("kabuto", "roca", 100, 10)
 kabutops = Tipo("kabutops", "roca", 200, 20)
 aerodactyl = Tipo("aerodactyl", "roca", 200, 20)
 snorlax = Tipo("snorlax", "normal", 400, 10)
-articuno = Tipo("articuno", "hielo", 300, 20)
-zapdos = Tipo("zapdos", "electrico", 300, 20)
-moltres = Tipo("moltres", "fuego", 300, 20)
+articuno = Boss("articuno", "hielo", 300, 20)
+zapdos = Boss("zapdos", "electrico", 300, 20)
+moltres = Boss("moltres", "fuego", 300, 20)
 dratini = Tipo("dratini", "dragon", 100, 10)
 dragonair = Tipo("dragonair", "dragon", 200, 25)
 dragonite = Tipo("dragonite", "dragon", 300, 40)
