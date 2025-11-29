@@ -70,11 +70,6 @@ class Equipo:
         self.dinero = 0
         self.pokemons = {
             "slot 1": None,
-            "slot 2": None,
-            "slot 3": None,
-            "slot 4": None,
-            "slot 5": None,
-            "slot 6": None
         }
         self.evo_index = {
             "slot 1": 0,
@@ -89,10 +84,13 @@ class Equipo:
         no_capturado = True
         for i in range(2,7):
             slot_capturado = f"slot {i}"
-            if no_capturado == True:
-                if self.pokemons[slot_capturado] is None:
-                    self.pokemons[slot_capturado] = pokemon
-                    no_capturado = False
+            if len(self.pokemons) <= 6:
+                if slot_capturado in self.pokemons:
+                    pass
+                else:
+                    if no_capturado == True:
+                        self.pokemons[slot_capturado] = pokemon
+                        no_capturado = False
                     
 
         if no_capturado:
@@ -130,28 +128,42 @@ class Equipo:
     
     def menu_curacion(self):
         curacion = input("quieres curar a tus pokemons: si/no\n").lower()
+
         if curacion == "no":
             print("no has querido curar a tu pokemon")
+            return
+
         while curacion == "si":
             self.ver_equipo()
-            opcion = input("elige el slot para curar al pokemon: ").lower()
-            if opcion not in self.pokemons or self.pokemons[opcion] is None:
-                print("no se ha podido curar el pokemon por que el slot esta vacio o el pokemon tiene full HP")
-            elif opcion in self.pokemons:
-                slot_pokemones = self.pokemons[opcion]
-                if slot_pokemones is not None:
-                    index = self.evo_index[opcion]
-                    pokemon_curar = slot_pokemones[index]
-                    self.regenerar(pokemon_curar)
+            opcion = input("elige el slot para curar al pokemon: ")
+
+            #se puede escribir "slot x" o el numero del slot
+            try:
+                numero = int(opcion)
+                index = f"slot {numero}"
+            except:
+                index = opcion.lower()
+            
+            #slot x no esta en mi equipo
+            if index not in self.pokemons:
+                print("no se ha podido curar el pokemon por que el slot esta vacio o no existe el slot")
+            #pokemon tiene full hp
+            elif self.pokemons[index].hp == self.pokemons[index].hp_actual:
+                print("Ese pokemon tiene full HP")
+            #slot esta en mi equipo
+            elif index in self.pokemons:
+                slot_pokemones = self.pokemons[index] 
+                index = self.evo_index[index]
+                pokemon_curar = slot_pokemones[index]
+                self.regenerar(pokemon_curar)
+
             else:
                 print("opcion no valida")
             curacion = input("quieres curar a otro pokemon? \nsi/no\n").lower()
+
             if curacion == "no":
                 print("has salido del menú de curación")
-                False
-
     
-                
     def todos_ko(self):
         for slot, linea in self.pokemons.items():
             if linea is not None:
@@ -162,25 +174,34 @@ class Equipo:
     
     def cambiar_pokemon(self):
         cambio = True
-        while cambio:
-            if self.todos_ko():
-                cambio = False
-                return None
-            else:
-                self.ver_equipo()
-                opcion = input("a que slot quieres cambiar: ").lower()
-                if opcion not in self.pokemons:
-                    print("Slot no válido")
-                elif self.pokemons[opcion] is None:
-                    print("Ese slot está vacío")
+        if "slot 2" in self.pokemons:
+            while cambio:
+                if self.todos_ko():
+                    cambio = False
+                    return None
                 else:
-                    index = self.evo_index[opcion]
-                    pokemon = self.pokemons[opcion][index]
-                    if pokemon.hp_actual <= 0:
-                        print("Ese pokemon está fuera de combate")
+                    self.ver_equipo()
+                    opcion = input("a que slot quieres cambiar: ").lower()
+                    try:
+                        numero = int(opcion)
+                        index = f"slot {numero}"
+                    except:
+                        index = opcion.lower()
+                    if index not in self.pokemons:
+                        print("Slot no válido")
+                    elif self.pokemons[index] is None:
+                        print("Ese slot está vacío")
                     else:
-                        cambio = False
-                        return opcion, pokemon
+                        indice = self.evo_index[index]
+                        pokemon = self.pokemons[index][indice]
+                        if pokemon.hp_actual <= 0:
+                            print("Ese pokemon está fuera de combate")
+                        else:
+                            cambio = False
+                            return opcion, pokemon
+        else:
+            print("solo tienes un pokemon, no puedes cambiar")
+            return False
 
 
 

@@ -46,42 +46,42 @@ while partida == "si":
 
         
     pokemon_activo = player.pokemons[slot][player.evo_index[slot]]
+    hacer_tutorial = input("quieres jugar el tutorial?\nsi/no\n").lower
+    if hacer_tutorial == "si":
+        #tutorial vs Gary
+        while tutorial == True:
+            while pokemon_activo.hp_actual > 0 and Gary.hp_actual > 0:
+                print(f"{5*'-'} Turno {turno} {5*'-'}")
+                accion = int(input("Escribe 1 para atacar: "))
 
-    #tutorial vs Gary
-    while tutorial == True:
-        while pokemon_activo.hp_actual > 0 and Gary.hp_actual > 0:
-            print(f"{5*'-'} Turno {turno} {5*'-'}")
-            accion = int(input("Escribe 1 para atacar: "))
+                if accion == 1:
+                    daño = round(pokemon_activo.atacar(Gary), 2)
+                    print(f"Has atacado a Bulbasur y le has hecho {daño} de daño. Le queda {round(Gary.hp_actual,2)}/{Gary.hp}HP")
 
-            if accion == 1:
-                daño = round(pokemon_activo.atacar(Gary), 2)
-                print(f"Has atacado a Bulbasur y le has hecho {daño} de daño. Le queda {round(Gary.hp_actual,2)}/{Gary.hp}HP")
+                if Gary.hp_actual > 0:
+                    daño = round(Gary.atacar(pokemon_activo), 2)
+                    print(f"Bulbasur te ha atacado y te ha hecho {daño} de daño. Te queda {round(pokemon_activo.hp_actual,2)}/{pokemon_activo.hp} HP \n")
 
-            if Gary.hp_actual > 0:
-                daño = round(Gary.atacar(pokemon_activo), 2)
-                print(f"Bulbasur te ha atacado y te ha hecho {daño} de daño. Te queda {round(pokemon_activo.hp_actual,2)}/{pokemon_activo.hp} HP \n")
+                turno += 1
 
-            turno += 1
-
-        print("fin del combate")
-        if pokemon_activo.hp_actual <= 0 and Gary.hp_actual > 0:
-            print("has perdido la partida")
-        elif pokemon_activo.hp_actual > 0 and Gary.hp_actual <= 0:
-            dinero_ganado = random.randint(200, 300)
-            print(f"has ganado la partida, has ganado {dinero_ganado} de oro")
-            pokemon_activo.nivel += 1
-            pokemon_activo.cambio_stats(1)
-            print(f"{pokemon_activo.nombre} ha subido de nivel, sus nuevos stats son:\n"
-              f"{pokemon_activo.ataque} ataque\n"
-              f"{pokemon_activo.hp} max HP")
-            player.dinero += dinero_ganado
-            print(f"tu pokemon a subido de nivel, ahora es nivel {pokemon_activo.nivel}")
-        else:
-            print("ha sido un empate")
-        print(f"enorabuena!!! has terminado el tutorial, ahora vamos a empezar una nueva batalla \n")
-        tutorial = False
-        pokemon_activo.curar()  
-    
+            print("fin del combate")
+            if pokemon_activo.hp_actual <= 0 and Gary.hp_actual > 0:
+                print("has perdido la partida")
+            elif pokemon_activo.hp_actual > 0 and Gary.hp_actual <= 0:
+                dinero_ganado = random.randint(200, 300)
+                print(f"has ganado la partida, has ganado {dinero_ganado} de oro")
+                pokemon_activo.nivel += 1
+                pokemon_activo.cambio_stats(1)
+                print(f"{pokemon_activo.nombre} ha subido de nivel, sus nuevos stats son:\n"
+                f"{pokemon_activo.ataque} ataque\n"
+                f"{pokemon_activo.hp} max HP")
+                player.dinero += dinero_ganado
+                print(f"tu pokemon a subido de nivel, ahora es nivel {pokemon_activo.nivel}")
+            else:
+                print("ha sido un empate")
+            print(f"enorabuena!!! has terminado el tutorial, ahora vamos a empezar una nueva batalla \n")
+            tutorial = False
+            pokemon_activo.curar()  
 
     #siguiente partida
     num_partida += 1
@@ -117,7 +117,10 @@ while partida == "si":
                     print(f"enhorabuena, has capturado a {oponente.nombre}")
     
         elif accion == 3:
-            slot, pokemon_activo = player.cambiar_pokemon()
+            if player.cambiar_pokemon() == False:
+                pass
+            else:
+                slot, pokemon_activo = player.cambiar_pokemon()
         
         else:
             print("eso no es posible, pierdes el turno")
